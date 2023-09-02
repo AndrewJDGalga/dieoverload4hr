@@ -9,37 +9,61 @@
 <body>
     <article id="game">
         <div id="game-player">
-
+            <p id="game-player_health">HP: 32</p>
+            <p id="game-player_atk">ATK: 2</p>
+            <p id="game-player_miss">Enemy miss chance: 0</p>
+            <p id="game-player_hit">Hit bonus: 0</p>
         </div>
         <div id="game-feedback">
-
+            <p>This is an example message!</p>
         </div>
         <div id="game-enemy">
-
+            <h3 id="game-enemy_name">The Snake</h3>
+            <p id="game-enemy_health">HP: 5</p>
+            <p id="game-enemy_atk">ATK: 2</p>
         </div>
-        <div class="game-ally">
-
+        <div id="game-ally1">
+            <h4 id="game-ally1_name">Ally1</h4>
+            <p id="game-ally1_health">HP: 0</p>
+            <p id="game-ally1_atk">ATK: 0</p>
         </div>
-        <button id="game-boost-dmg"></button>
-        <div class="game-ally">
-            
+        <button id="game-boost-dmg">Increase your Damage</button>
+        <div id="game-ally2">
+            <h4 id="game-ally2_name">Ally2</h4>
+            <p id="game-ally2_health">HP: 0</p>
+            <p id="game-ally2_atk">ATK: 0</p>
         </div>
-        <button id="game-boost-hit"></button>
-        <div class="game-ally">
-            
+        <button id="game-boost-hit">Increase your chance to Hit</button>
+        <div id="game-ally3">
+            <h4 id="game-ally3_name">Ally3</h4>
+            <p id="game-ally3_health">HP: 0</p>
+            <p id="game-ally3_atk">ATK: 0</p>
         </div>
-        <button id="game-boost-miss"></button>
-        <div class="game-ally">
-            
+        <div id="game-ally4">
+            <h4 id="game-ally4_name">Ally4</h4>
+            <p id="game-ally4_health">HP: 0</p>
+            <p id="game-ally4_atk">ATK: 0</p>
         </div>
-        <button id="game-call-friend"></button>
-        <div class="game-ally">
-            
+        <button id="game-call-friend">Call for Help</button>
+        <div id="game-ally5">
+            <h4 id="game-ally5_name">Ally5</h4>
+            <p id="game-ally5_health">HP: 0</p>
+            <p id="game-ally5_atk">ATK: 0</p>
         </div>
-        <div class="game-ally">
-            
+        <div id="game-ally6">
+            <h4 id="game-ally6_name">Ally6</h4>
+            <p id="game-ally6_health">HP: 0</p>
+            <p id="game-ally6_atk">ATK: 0</p>
         </div>
     </article>
+    <div id="game-player_data" class="game-entity_info" data-name="player" data-health="32" data-attack="2"></div>
+    <div id="game-dog_data" class="game-entity_info" data-name="The Dog" data-health="10" data-attack="3"></div>
+    <div id="game-snake_data" class="game-entity_info" data-name="The Snake" data-health="5" data-attack="2"></div>
+    <div id="game-wolf_data" class="game-entity_info" data-name="The Wolf" data-health="10" data-attack="3"></div>
+    <div id="game-ape_data" class="game-entity_info" data-name="The Ape" data-health="14" data-attack="4"></div>
+    <div id="game-tiger_data" class="game-entity_info" data-name="The Tiger" data-health="19" data-attack="5"></div>
+    <div id="game-bear_data" class="game-entity_info" data-name="The Bear" data-health="25" data-attack="6"></div>
+    <div id="game-trapper_data" class="game-entity_info" data-name="The Trapper" data-health="32" data-attack="7"></div>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,8 +1,17 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 #game {
     width: 90%;
     height: 90%;
     margin: 0 auto;
     display: grid;
+    grid-template-columns: repeat(3, 30vw);
+    grid-template-rows: repeat(7, 12vh);
 }
 
 #game-player {
@@ -14,7 +23,7 @@
 }
 
 #game-enemy {
-
+    grid-row: span 7;
 }
 
 .game-ally {
