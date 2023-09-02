@@ -1,0 +1,9 @@
+*
+**/*
+
+!.gitignore
+!LICENSE
+!README.md
+!*.html
+!*.js
+!*.css
