@@ -10,6 +10,10 @@ const basePlayer = document.getElementById('game-player_data');
 const baseDog = document.getElementById('game-dog_data');
 const baseSnake = document.getElementById('game-snake_data');
 const baseWolf = document.getElementById('game-wolf_data');
+const baseApe = document.getElementById('game-ape_data');
+const baseTiger = document.getElementById('game-tiger_data');
+const baseBear = document.getElementById('game-bear_data');
+const baseTrapper = document.getElementById('game-trapper_data');
 
 let gameOver = false;
 
@@ -19,6 +23,11 @@ class Entity {
         this.health = health;
         this.atk = atk;
     }
+    get entityName() { return this.name;}
+    get entityHealth() { return this.health; }
+    get entityAttack() { return this.atk; }
+    set entityHealth(newVal) { this.health = newVal; }
+    isDead() { return this.health <= 0; }
 }
 
 class Player extends Entity {
@@ -81,6 +90,12 @@ const textObj = (marker, entity="", number="") => {
     }
     return txt;
 }
+
+const setupEntity = (dataSource) => {
+    return new Entity(dataSource.dataset.name, dataSource.dataset.health, dataSource.dataset.attack);
+}
+const dog = setupEntity(baseDog);
+console.log(dog.isDead());
 
 const initGame = ()=> {
     feedback.innerText = textObj('fight-1');
