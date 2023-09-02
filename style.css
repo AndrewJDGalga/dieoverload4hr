@@ -1,0 +1,38 @@
+#game {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    display: grid;
+}
+
+#game-player {
+
+}
+
+#game-feedback {
+
+}
+
+#game-enemy {
+
+}
+
+.game-ally {
+
+}
+
+#game-boost-dmg {
+
+}
+
+#game-boost-hit {
+
+}
+
+#game-boost-miss {
+
+}
+
+#game-call-friend {
+
+}
