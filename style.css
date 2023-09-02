@@ -50,3 +50,7 @@ html, body {
 .game-entity_info {
     display: none;
 }
+
+#game-restart {
+    visibility: hidden;
+}
