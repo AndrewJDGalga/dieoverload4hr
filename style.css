@@ -21,6 +21,7 @@ html, body {
 
 #game-feedback {
     grid-row: span 3;
+    margin-top: 16px;
 }
 
 #game-enemy {

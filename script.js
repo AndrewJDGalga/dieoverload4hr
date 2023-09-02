@@ -3,6 +3,7 @@ const btnIncDamage = document.getElementById('game-boost-dmg');
 const btnIncHit = document.getElementById('game-boost-hit');
 const btnCall = document.getElementById('game-call');
 const btnRestart = document.getElementById('game-restart');
+const feedback = document.getElementById('game-feedback');
 
 /*data sources*/
 const basePlayer = document.getElementById('game-player_data');
@@ -28,3 +29,33 @@ class Player extends Entity {
     }
 }
 
+const textObj = (marker) => {
+    let txt = "";
+    switch(marker){
+        case 'start':
+            txt = "You enter the forest."
+            break;
+    }
+    return txt;
+}
+
+const initGame = ()=> {
+    feedback.innerText = textObj('start');
+};
+initGame();
+
+btnIncDamage.addEventListener('click', ()=>{
+
+});
+
+btnIncHit.addEventListener('click', ()=>{
+
+});
+
+btnCall.addEventListener('click', ()=>{
+
+});
+
+btnRestart.addEventListener('click', ()=>{
+
+});
