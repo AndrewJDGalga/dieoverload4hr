@@ -28,7 +28,7 @@ html, body {
 }
 
 .game-ally {
-
+    visibility: hidden;
 }
 
 #game-boost-dmg {
