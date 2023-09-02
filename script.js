@@ -29,18 +29,61 @@ class Player extends Entity {
     }
 }
 
-const textObj = (marker) => {
+const textObj = (marker, entity="", number="") => {
     let txt = "";
     switch(marker){
-        case 'start':
-            txt = "You enter the forest."
+        case 'fight-1':
+            txt = "You enter the forest. A snake emerges from the bushes.";
+            break;
+        case 'end-normal':
+            txt = `${entity} was defeated. ${entity} has joined you.`;
+            break;
+        case 'fight-2':
+            txt = "You come upon the ruins you seek. As you approach, a growling wolf emerges. It's a warning, but you won't be turning around.";
+            break;
+        case 'fight-3':
+            txt = "The interior of the ruins is not as dark as you feared. However, you don't see the ape until it's almost on you. The creature is unlike anything you've seen before, its fur matted in what looks to be an attempt at camouflage, and you wonder if this is where your quest ends.";
+            break;
+        case 'fight-4':
+            txt = "The tiger does not bother to hide itself. It lies across your path, so unnaturally calm you almost don't notice it. You may've had a chance to run, but as you watch the animal roll to its feet, you know that chance has passed.";
+            break;
+        case 'fight-5':
+            txt = "You emerge from the ruins into a grassy field. Nearby, a bear is ambling back and forth almost comically. As you emerge it sees you, and it ambles over on two legs almost as if wants to ask you a question. However, as the bear nears, the creature opens its arms and jaws to receive you. You decide it would be best to defend yourself.";
+            break;
+        case 'fight-6':
+            txt = "The trapper does not speak to you. He mearly growls his distaste.";
+            break;
+        case 'end-final':
+            txt = `${entity} defeated!`
+            break;
+        case 'end-game':
+            txt = "Congratulations! That's all the game there is, and you beat the whole thing. Hope it was interesting.";
+            break;
+        case 'miss':
+            txt = `${entity} misses!`;
+            break;
+        case 'hit':
+            txt = `${entity} hit, doing ${number} damage!`;
+            break;
+        case 'call-success':
+            txt = `${entity} called!`;
+            break;
+        case 'call-fail':
+            txt = "You called for aid, but nothing came!";
+        case 'banished':
+            txt = `${entity} left!`;
+            break;
+        case 'hit-chance':
+            txt = `You increased your hit chance by ${number}!`;
+        case 'damage-boost':
+            txt = `You increased your damage by ${number}!`;
             break;
     }
     return txt;
 }
 
 const initGame = ()=> {
-    feedback.innerText = textObj('start');
+    feedback.innerText = textObj('fight-1');
 };
 initGame();
 
