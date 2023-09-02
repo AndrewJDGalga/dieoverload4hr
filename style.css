@@ -11,7 +11,8 @@ html, body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 30vw);
-    grid-template-rows: repeat(7, 12vh);
+    grid-template-rows: repeat(7, 120px);
+    gap: 16px;
 }
 
 #game-player {
@@ -19,7 +20,7 @@ html, body {
 }
 
 #game-feedback {
-
+    grid-row: span 3;
 }
 
 #game-enemy {
@@ -44,4 +45,8 @@ html, body {
 
 #game-call-friend {
 
+}
+
+.game-entity_info {
+    display: none;
 }
