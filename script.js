@@ -4,6 +4,7 @@ const btnIncHit = document.getElementById('game-boost-hit');
 const btnCall = document.getElementById('game-call');
 const btnRestart = document.getElementById('game-restart');
 const feedback = document.getElementById('game-feedback');
+const enemyWindow = document.getElementById('game-enemy');
 
 /*data sources*/
 const basePlayer = document.getElementById('game-player_data');
@@ -16,6 +17,9 @@ const baseBear = document.getElementById('game-bear_data');
 const baseTrapper = document.getElementById('game-trapper_data');
 
 let gameOver = false;
+let enemySequence = [];
+let dog = null;
+let player = null;
 
 class Entity {
     constructor(name, health, atk){
@@ -51,8 +55,15 @@ const setupEntity = (dataSource) => {
 const setupPlayer = () => {
     return new Player(basePlayer.dataset.name, basePlayer.dataset.health, basePlayer.dataset.attack);
 }
-const player = setupPlayer(); //setupEntity(basePlayer); //setupPlayer();
-console.log(player.playerAttackBonus);
+
+const setEnemySequence = () => {
+    enemySequence[0] = setupEntity(baseSnake);
+    enemySequence[1] = setupEntity(baseWolf);
+    enemySequence[2] = setupEntity(baseApe);
+    enemySequence[3] = setupEntity(baseTiger);
+    enemySequence[4] = setupEntity(baseBear);
+    enemySequence[5] = setupEntity(baseTrapper);
+};
 
 const textObj = (marker, entity="", number="") => {
     let txt = "";
@@ -107,9 +118,23 @@ const textObj = (marker, entity="", number="") => {
     return txt;
 }
 
-
+const setEnemyWindow = (index) => {
+    if(index < enemySequence.length) {
+        const enemyNameNode = enemyWindow.querySelector('#game-enemy_name');
+        const enemyHealthNode = enemyWindow.querySelector('#game-enemy_health');
+        const enemyAtkNode = enemyWindow.querySelector('#game-enemy_atk');
+        enemyNameNode.innerText = enemySequence[index].entityName;
+        enemyHealthNode.innerText = enemySequence[index].entityHealth;
+        enemyAtkNode.innerText = enemySequence[index].entityAttack;
+    }
+}
 
 const initGame = ()=> {
+    dog = setupEntity(baseDog);
+    player = setupPlayer();
+    setEnemySequence();
+    setEnemyWindow(0);
+
     feedback.innerText = textObj('fight-1');
 };
 initGame();
