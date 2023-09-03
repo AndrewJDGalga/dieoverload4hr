@@ -65,6 +65,11 @@ const setEnemySequence = () => {
     enemySequence[5] = setupEntity(baseTrapper);
 };
 
+const rollDie = () => {
+    return Math.floor(Math.random() * 6) + 1;
+}
+console.log(rollDie());
+
 const textObj = (marker, entity="", number="") => {
     let txt = "";
     switch(marker){
