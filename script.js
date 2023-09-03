@@ -5,6 +5,7 @@ const btnCall = document.getElementById('game-call');
 const btnRestart = document.getElementById('game-restart');
 const feedback = document.getElementById('game-feedback');
 const enemyWindow = document.getElementById('game-enemy');
+const playerWindow = document.getElementById('game-player');
 
 /*data sources*/
 const basePlayer = document.getElementById('game-player_data');
@@ -18,14 +19,16 @@ const baseTrapper = document.getElementById('game-trapper_data');
 
 let gameOver = false;
 let enemySequence = [];
-let dog = null;
+let unlockedAllies = [];
+let summonedAllies = [];
 let player = null;
+let gameProgress = 0;
 
 class Entity {
     constructor(name, health, atk){
         this.name = name;
         this.health = health;
-        this.atk = atk;
+        this.atk = Number(atk);
     }
     get entityName() { return this.name;}
     get entityHealth() { return this.health; }
@@ -37,22 +40,22 @@ class Entity {
 class Player extends Entity {
     constructor(name, health, atk) {
         super(name, health, atk);
+        this.dmgBonus = 0;
         this.hitBonus = 0;
-        this.atkBonus = 0;
     }
     get playerHealth() {return this.health;}
-    get playerAttack() { return this.atk + this.atkBonus;}
+    get playerAttack() { return this.atk + this.dmgBonus;}
+    get playerDMGBonus() { return this.dmgBonus; }
     get playerHitBonus() { return this.hitBonus; }
-    get playerAttackBonus() { return this.atkBonus; }
     set playerHitBonus(newVal) { this.hitBonus = newVal; }
-    set playerAttackBonus(newVal) { this.atkBonus = newVal; }
+    set playerDMGBonus(newVal) { this.dmgBonus = newVal; }
 }
 
 const setupEntity = (dataSource) => {
     return new Entity(dataSource.dataset.name, dataSource.dataset.health, dataSource.dataset.attack);
 }
 
-const setupPlayer = () => {
+const setupPlayerObj = () => {
     return new Player(basePlayer.dataset.name, basePlayer.dataset.health, basePlayer.dataset.attack);
 }
 
@@ -68,7 +71,6 @@ const setEnemySequence = () => {
 const rollDie = () => {
     return Math.floor(Math.random() * 6) + 1;
 }
-console.log(rollDie());
 
 const textObj = (marker, entity="", number="") => {
     let txt = "";
@@ -123,7 +125,7 @@ const textObj = (marker, entity="", number="") => {
     return txt;
 }
 
-const setEnemyWindow = (index) => {
+const updateEnemyWindow = (index) => {
     if(index < enemySequence.length) {
         const enemyNameNode = enemyWindow.querySelector('#game-enemy_name');
         const enemyHealthNode = enemyWindow.querySelector('#game-enemy_health');
@@ -134,11 +136,22 @@ const setEnemyWindow = (index) => {
     }
 }
 
+const updatePlayerWindow = () => {
+    const playerHealth = playerWindow.querySelector('#game-player_health');
+    const playerAttack = playerWindow.querySelector('#game-player_atk');
+    const playerDMGBonus = playerWindow.querySelector('#game-player_damage_bonus');
+    const playerHitBonus = playerWindow.querySelector('#game-player_hit');
+    playerHealth.innerText = 'HP: ' + player.playerHealth;
+    playerAttack.innerText = 'ATK: ' + player.playerAttack;
+    playerDMGBonus.innerText = 'DMG Bonus: ' + player.playerDMGBonus;
+    playerHitBonus.innerText = 'Hit Bonus: ' + player.playerHitBonus;
+}
+
 const initGame = ()=> {
-    dog = setupEntity(baseDog);
-    player = setupPlayer();
+    player = setupPlayerObj();
+    updatePlayerWindow();
     setEnemySequence();
-    setEnemyWindow(0);
+    updateEnemyWindow(gameProgress);
 
     feedback.innerText = textObj('fight-1');
 };
