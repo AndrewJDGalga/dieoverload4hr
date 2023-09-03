@@ -36,7 +36,23 @@ class Player extends Entity {
         this.hitBonus = 0;
         this.atkBonus = 0;
     }
+    get playerHealth() {return this.health;}
+    get playerAttack() { return this.atk + this.atkBonus;}
+    get playerHitBonus() { return this.hitBonus; }
+    get playerAttackBonus() { return this.atkBonus; }
+    set playerHitBonus(newVal) { this.hitBonus = newVal; }
+    set playerAttackBonus(newVal) { this.atkBonus = newVal; }
 }
+
+const setupEntity = (dataSource) => {
+    return new Entity(dataSource.dataset.name, dataSource.dataset.health, dataSource.dataset.attack);
+}
+
+const setupPlayer = () => {
+    return new Player(basePlayer.dataset.name, basePlayer.dataset.health, basePlayer.dataset.attack);
+}
+const player = setupPlayer(); //setupEntity(basePlayer); //setupPlayer();
+console.log(player.playerAttackBonus);
 
 const textObj = (marker, entity="", number="") => {
     let txt = "";
@@ -91,11 +107,7 @@ const textObj = (marker, entity="", number="") => {
     return txt;
 }
 
-const setupEntity = (dataSource) => {
-    return new Entity(dataSource.dataset.name, dataSource.dataset.health, dataSource.dataset.attack);
-}
-const dog = setupEntity(baseDog);
-console.log(dog.isDead());
+
 
 const initGame = ()=> {
     feedback.innerText = textObj('fight-1');
