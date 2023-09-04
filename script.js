@@ -24,19 +24,30 @@ let summonedAllies = [];
 let player = null;
 let gameProgress = 0;
 
+
+class Die {
+    constructor(limit){
+        this.size = limit;
+    }
+    roll() {
+        return Math.floor(Math.random() * this.size) + 1;
+    }
+}
+
 class Entity {
     constructor(name, health, atk){
         this.name = name;
         this.health = health;
         this.atk = Number(atk);
         this.dmgBonus = 0;
+        this.die = new Die(6);
     }
     get entityName() { return this.name;}
     get entityHealth() { return this.health; }
     get entityAttack() { return this.atk + this.dmgBonus; }
     set entityHealth(newVal) { this.health = newVal; }
     isDead() { return this.health <= 0; }
-    getRoll() { return Math.floor(Math.random() * 6) + 1; }
+    getRoll() { return this.die.roll(); }
 }
 
 class Player extends Entity {
@@ -45,8 +56,6 @@ class Player extends Entity {
         this.dmgBonus = 0;
         this.hitBonus = 0;
     }
-    //get playerHealth() {return this.health;}
-    //get playerAttack() { return this.atk + this.dmgBonus;}
     get playerDMGBonus() { return this.dmgBonus; }
     get playerHitBonus() { return this.hitBonus; }
     set playerHitBonus(newVal) { this.hitBonus = newVal; }
@@ -69,11 +78,6 @@ const setEnemySequence = () => {
     enemySequence[4] = setupEntity(baseBear);
     enemySequence[5] = setupEntity(baseTrapper);
 };
-
-/*
-const rollDie = () => {
-    return Math.floor(Math.random() * 6) + 1;
-}*/
 
 const textObj = (marker, entity="", number="") => {
     let txt = "";
@@ -128,31 +132,6 @@ const textObj = (marker, entity="", number="") => {
     return txt;
 }
 
-const combatHandler = (combatant1, combatant2, txtSource) => {
-    const combatant1Roll = combatant1.getRoll();
-    const combatant2Roll = combatant2.getRoll();
-    let outcome = txtSource('miss', combatant1.entityName) + ",  " + txtSource('miss', combatant2.entityName);
-
-    if(combatant1Roll > combatant2Roll) {
-        outcome = textObj('hit', combatant2.entityName, combatant2.entityAttack);
-
-    } else if (combatant1Roll < combatant2Roll) {
-        outcome = textObj('hit', combatant1.entityName, combatant1.entityAttack);
-    }
-}
-
-/*
-const updateEnemyWindow = (index) => {
-    if(index < enemySequence.length) {
-        const enemyNameNode = enemyWindow.querySelector('#game-enemy_name');
-        const enemyHealthNode = enemyWindow.querySelector('#game-enemy_health');
-        const enemyAtkNode = enemyWindow.querySelector('#game-enemy_atk');
-        enemyNameNode.innerText = enemySequence[index].entityName;
-        enemyHealthNode.innerText = 'HP: ' + enemySequence[index].entityHealth;
-        enemyAtkNode.innerText = 'Damage: ' + enemySequence[index].entityAttack;
-    }
-}*/
-
 const updatePlayerWindow = () => {
     const playerHealth = playerWindow.querySelector('#game-player_health');
     const playerAttack = playerWindow.querySelector('#game-player_atk');
@@ -171,21 +150,39 @@ const updateEntityWindow = (entity, window) => {
     windows[2].innerText = entity.entityAttack;
 }
 
+const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Window, txtSource) => {
+    const combatant1Roll = combatant1.getRoll();
+    const combatant2Roll = combatant2.getRoll();
+    let outcome = txtSource('miss', combatant1.entityName) + ",  " + txtSource('miss', combatant2.entityName);
+    let damage = 0;
 
+    if(combatant1Roll > combatant2Roll) {
+        outcome = textObj('hit', combatant2.entityName, combatant2.entityAttack);
+        damage = combatant1.entityAttack;
+        combatant2.entityHealth -= damage;
+    } else if (combatant1Roll < combatant2Roll) {
+        outcome = textObj('hit', combatant1.entityName, combatant1.entityAttack);
+        damage = combatant2.entityAttack;
+        combatant1.entityHealth -= damage;
+    }
+
+    (combatant1.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant1, combatant1Window);
+    (combatant2.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant2, combatant2Window);
+
+    feedback.innerText = outcome;
+}
 
 const initGame = ()=> {
     player = setupPlayerObj();
     updatePlayerWindow();
     setEnemySequence();
-    //updateEnemyWindow(gameProgress);
     updateEntityWindow(enemySequence[0], enemyWindow);
 
     feedback.innerText = textObj('fight-1');
 };
 initGame();
 
-//console.log(combatHandler(player, enemySequence[0], textObj));
-//updateEntityWindow(enemySequence[0], enemyWindow);
+combatHandler(player, enemySequence[0], playerWindow, enemyWindow, textObj);
 
 btnIncDamage.addEventListener('click', ()=>{
 
