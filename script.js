@@ -40,6 +40,7 @@ class Entity {
         this.health = health;
         this.atk = Number(atk);
         this.dmgBonus = 0;
+        this.hitBonus = 0;
         this.die = new Die(6);
     }
     get entityName() { return this.name;}
@@ -47,7 +48,7 @@ class Entity {
     get entityAttack() { return this.atk + this.dmgBonus; }
     set entityHealth(newVal) { this.health = newVal; }
     isDead() { return this.health <= 0; }
-    getRoll() { return this.die.roll(); }
+    getRoll() { return this.die.roll() + this.hitBonus; }
 }
 
 class Player extends Entity {
@@ -60,6 +61,10 @@ class Player extends Entity {
     get playerHitBonus() { return this.hitBonus; }
     set playerHitBonus(newVal) { this.hitBonus = newVal; }
     set playerDMGBonus(newVal) { this.dmgBonus = newVal; }
+    resetPlayerBonuses() { 
+        this.dmgBonus = 0;
+        this.hitBonus = 0;
+    }
 }
 
 const setupEntity = (dataSource) => {
@@ -150,6 +155,13 @@ const updateEntityWindow = (entity, window) => {
     windows[2].innerText = entity.entityAttack;
 }
 
+const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, output, txt) => {
+    (combatant1.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant1, combatant1Window);
+    (combatant2.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant2, combatant2Window);
+
+    output.innerText = txt;
+}
+
 const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Window, txtSource) => {
     const combatant1Roll = combatant1.getRoll();
     const combatant2Roll = combatant2.getRoll();
@@ -166,10 +178,7 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
         combatant1.entityHealth -= damage;
     }
 
-    (combatant1.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant1, combatant1Window);
-    (combatant2.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant2, combatant2Window);
-
-    feedback.innerText = outcome;
+    resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, feedback, outcome);
 }
 
 const initGame = ()=> {
@@ -182,14 +191,16 @@ const initGame = ()=> {
 };
 initGame();
 
-combatHandler(player, enemySequence[0], playerWindow, enemyWindow, textObj);
+//combatHandler(player, enemySequence[0], playerWindow, enemyWindow, textObj);
 
 btnIncDamage.addEventListener('click', ()=>{
-
+    player.playerDMGBonus += 1;
+    combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
 });
 
 btnIncHit.addEventListener('click', ()=>{
-
+    player.playerHitBonus += 1;
+    combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
 });
 
 btnCall.addEventListener('click', ()=>{
