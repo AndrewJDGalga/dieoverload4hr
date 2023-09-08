@@ -90,8 +90,8 @@ const textObj = (marker, entity="", number="") => {
         case 'fight-1':
             txt = "You enter the forest. A snake emerges from the bushes.";
             break;
-        case 'end-normal':
-            txt = `${entity} was defeated. ${entity} has joined you.`;
+        case 'end-join':
+            txt = `${entity} has joined you.`;
             break;
         case 'fight-2':
             txt = "You come upon the ruins you seek. As you approach, a growling wolf emerges. It's a warning, but you won't be turning around.";
@@ -108,8 +108,11 @@ const textObj = (marker, entity="", number="") => {
         case 'fight-6':
             txt = "The trapper does not speak to you. He mearly growls his distaste.";
             break;
-        case 'end-final':
-            txt = `${entity} defeated!`
+        case 'end':
+            txt = `${entity} defeated!`;
+            break;
+        case 'end-loss':
+            txt = 'Game over';
             break;
         case 'end-game':
             txt = "Congratulations! That's all the game there is, and you beat the whole thing. Hope it was interesting.";
@@ -151,8 +154,8 @@ const updatePlayerWindow = () => {
 const updateEntityWindow = (entity, window) => {
     const windows = Array.from(window.children);
     windows[0].innerText = entity.entityName;
-    windows[1].innerText = entity.entityHealth;
-    windows[2].innerText = entity.entityAttack;
+    windows[1].innerText = 'HP: ' + entity.entityHealth;
+    windows[2].innerText = 'Damage: ' + entity.entityAttack;
 }
 
 const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, output, txt) => {
@@ -162,20 +165,36 @@ const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Windo
     output.innerText = txt;
 }
 
+const damageHandler = (attacker, receiver, txtSrc) => {
+    let outcome = "";
+    receiver.entityHealth -= attacker.entityAttack;
+    if(receiver.entityName === player.entityName && receiver.entityHealth.isDead) {
+        //player dead
+        outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-loss');
+        gameOver = true;
+    } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.entityHealth.isDead) {
+        //enemy dead
+        outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
+    }else if(receiver.entityHealth.isDead) {
+        //ally dead
+        outcome = txtSrc('end', receiver.entityName);
+    } else {
+        //just hurt
+        outcome = textObj('hit', receiver.entityName, attacker.entityAttack);
+    }
+
+    return outcome;
+}
+
 const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Window, txtSource) => {
     const combatant1Roll = combatant1.getRoll();
     const combatant2Roll = combatant2.getRoll();
     let outcome = txtSource('miss', combatant1.entityName) + ",  " + txtSource('miss', combatant2.entityName);
-    let damage = 0;
 
     if(combatant1Roll > combatant2Roll) {
-        outcome = textObj('hit', combatant2.entityName, combatant2.entityAttack);
-        damage = combatant1.entityAttack;
-        combatant2.entityHealth -= damage;
+        outcome = damageHandler(combatant1, combatant2, txtSource);
     } else if (combatant1Roll < combatant2Roll) {
-        outcome = textObj('hit', combatant1.entityName, combatant1.entityAttack);
-        damage = combatant2.entityAttack;
-        combatant1.entityHealth -= damage;
+        outcome = damageHandler(combatant2, combatant1, txtSource);
     }
 
     resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, feedback, outcome);
@@ -190,8 +209,6 @@ const initGame = ()=> {
     feedback.innerText = textObj('fight-1');
 };
 initGame();
-
-//combatHandler(player, enemySequence[0], playerWindow, enemyWindow, textObj);
 
 btnIncDamage.addEventListener('click', ()=>{
     player.playerDMGBonus += 1;
