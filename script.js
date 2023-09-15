@@ -29,8 +29,11 @@ class Die {
     constructor(limit){
         this.size = limit;
     }
-    roll() {
+    rollBaseOne() {
         return Math.floor(Math.random() * this.size) + 1;
+    }
+    rollBaseZero(){
+        return Math.floor(Math.random() * this.size);
     }
 }
 
@@ -48,7 +51,7 @@ class Entity {
     get entityAttack() { return this.atk + this.dmgBonus; }
     set entityHealth(newVal) { this.health = newVal; }
     isDead() { return this.health <= 0; }
-    getRoll() { return this.die.roll() + this.hitBonus; }
+    getRoll() { return this.die.rollBaseOne() + this.hitBonus; }
 }
 
 class Player extends Entity {
@@ -168,7 +171,6 @@ const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Windo
 const damageHandler = (attacker, receiver, txtSrc) => {
     let outcome = "";
     receiver.entityHealth -= attacker.entityAttack;
-    console.log(receiver.entityHealth.isDead);
     if(receiver.entityName === player.entityName && receiver.isDead) {
         //player dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-loss');
@@ -176,9 +178,7 @@ const damageHandler = (attacker, receiver, txtSrc) => {
     } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead) {
         //enemy dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
-        console.log('enemy dead');
         gameProgress++;
-        console.log('next enemy: ' + gameProgress);
     }else if(receiver.entityHealth.isDead) {
         //ally dead
         outcome = txtSrc('end', receiver.entityName);
@@ -204,8 +204,14 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
     resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, feedback, outcome);
 }
 
+const callFriend = () => {
+    const chance = new Die(6);
+    (unlockedAllies[chance.rollBaseZero()]) ? console.log('ally summoned!') : console.log('no ally!');
+};
+
 const initGame = ()=> {
     player = setupPlayerObj();
+    unlockedAllies[0] = setupEntity(baseDog);
     updatePlayerWindow();
     setEnemySequence();
     updateEntityWindow(enemySequence[gameProgress], enemyWindow);
@@ -216,7 +222,6 @@ initGame();
 
 btnIncDamage.addEventListener('click', ()=>{
     player.playerDMGBonus += 1;
-    console.log("enemy: " + gameProgress);
     combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
 });
 
@@ -226,7 +231,7 @@ btnIncHit.addEventListener('click', ()=>{
 });
 
 btnCall.addEventListener('click', ()=>{
-
+    callFriend();
 });
 
 btnRestart.addEventListener('click', ()=>{
