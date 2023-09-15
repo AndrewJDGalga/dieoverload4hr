@@ -168,13 +168,17 @@ const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Windo
 const damageHandler = (attacker, receiver, txtSrc) => {
     let outcome = "";
     receiver.entityHealth -= attacker.entityAttack;
-    if(receiver.entityName === player.entityName && receiver.entityHealth.isDead) {
+    console.log(receiver.entityHealth.isDead);
+    if(receiver.entityName === player.entityName && receiver.isDead) {
         //player dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-loss');
         gameOver = true;
-    } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.entityHealth.isDead) {
+    } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead) {
         //enemy dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
+        console.log('enemy dead');
+        gameProgress++;
+        console.log('next enemy: ' + gameProgress);
     }else if(receiver.entityHealth.isDead) {
         //ally dead
         outcome = txtSrc('end', receiver.entityName);
@@ -204,7 +208,7 @@ const initGame = ()=> {
     player = setupPlayerObj();
     updatePlayerWindow();
     setEnemySequence();
-    updateEntityWindow(enemySequence[0], enemyWindow);
+    updateEntityWindow(enemySequence[gameProgress], enemyWindow);
 
     feedback.innerText = textObj('fight-1');
 };
@@ -212,6 +216,7 @@ initGame();
 
 btnIncDamage.addEventListener('click', ()=>{
     player.playerDMGBonus += 1;
+    console.log("enemy: " + gameProgress);
     combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
 });
 
