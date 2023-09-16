@@ -178,6 +178,9 @@ const damageHandler = (attacker, receiver, txtSrc) => {
     } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead) {
         //enemy dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
+        let prelength = unlockedAllies.length;
+        unlockedAllies[unlockedAllies.length] = receiver;
+        console.log(unlockedAllies[prelength].entityName + " added to party, party is now " + unlockedAllies.length);
         gameProgress++;
     }else if(receiver.entityHealth.isDead) {
         //ally dead
