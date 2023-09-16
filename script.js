@@ -215,11 +215,14 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
 const callFriend = () => {
     const chance = new Die(6);
     const ally = unlockedAllies[chance.rollBaseZero()];
-    let statement = "";
-    //(unlockedAllies[chance.rollBaseZero()]) ? console.log('ally summoned!') : console.log('no ally!');
+    const summoned = (ally) ? summonedAllies.includes(ally) : false;
+    let statement = 'Die fail, no ally from that roll!';
 
-    if(ally) {
-
+    if(ally && !summoned) {
+        statement = `Summoned ${ally.entityName}!`;
+        summonedAllies.push(ally);
+    } else if(ally && summoned) {
+        statement = `Die fail, ${ally.entityName} already summoned!`;
     }
 
     return statement;
@@ -247,7 +250,7 @@ btnIncHit.addEventListener('click', ()=>{
 });
 
 btnCall.addEventListener('click', ()=>{
-    callFriend();
+    updateFeedbackUI('You toss the die of fate. ' + callFriend());
 });
 
 btnRestart.addEventListener('click', ()=>{
