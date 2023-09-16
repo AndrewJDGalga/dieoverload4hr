@@ -6,6 +6,7 @@ const btnRestart = document.getElementById('game-restart');
 const feedback = document.getElementById('game-feedback');
 const enemyWindow = document.getElementById('game-enemy');
 const playerWindow = document.getElementById('game-player');
+const allyWindows = document.getElementsByClassName('game-ally');
 
 /*data sources*/
 const basePlayer = document.getElementById('game-player_data');
@@ -161,11 +162,15 @@ const updateEntityWindow = (entity, window) => {
     windows[2].innerText = 'Damage: ' + entity.entityAttack;
 }
 
+const updateFeedbackUI = (txt) => {
+    feedback.innerText = txt;
+}
+
 const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, output, txt) => {
     (combatant1.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant1, combatant1Window);
     (combatant2.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant2, combatant2Window);
 
-    output.innerText = txt;
+    updateFeedbackUI(txt);
 }
 
 const damageHandler = (attacker, receiver, txtSrc) => {
@@ -209,7 +214,15 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
 
 const callFriend = () => {
     const chance = new Die(6);
-    (unlockedAllies[chance.rollBaseZero()]) ? console.log('ally summoned!') : console.log('no ally!');
+    const ally = unlockedAllies[chance.rollBaseZero()];
+    let statement = "";
+    //(unlockedAllies[chance.rollBaseZero()]) ? console.log('ally summoned!') : console.log('no ally!');
+
+    if(ally) {
+
+    }
+
+    return statement;
 };
 
 const initGame = ()=> {
