@@ -6,7 +6,7 @@ const btnRestart = document.getElementById('game-restart');
 const feedback = document.getElementById('game-feedback');
 const enemyWindow = document.getElementById('game-enemy');
 const playerWindow = document.getElementById('game-player');
-const allyWindows = document.getElementsByClassName('game-ally');
+const allyWindows = Array.from(document.getElementsByClassName('game-ally'));
 
 /*data sources*/
 const basePlayer = document.getElementById('game-player_data');
@@ -162,6 +162,12 @@ const updateEntityWindow = (entity, window) => {
     windows[2].innerText = 'Damage: ' + entity.entityAttack;
 }
 
+const setWindowVisibility = (window, hide=false) => {
+    window.classList.add('visible');
+}
+
+setWindowVisibility(allyWindows[0]);
+
 const updateFeedbackUI = (txt) => {
     feedback.innerText = txt;
 }
@@ -221,6 +227,8 @@ const callFriend = () => {
     if(ally && !summoned) {
         statement = `Summoned ${ally.entityName}!`;
         summonedAllies.push(ally);
+        console.log(ally.entityName);
+        updateEntityWindow(ally, allyWindows[summonedAllies.length -1]);
     } else if(ally && summoned) {
         statement = `Die fail, ${ally.entityName} already summoned!`;
     }
