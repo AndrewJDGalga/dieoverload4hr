@@ -218,6 +218,14 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
     resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, feedback, outcome);
 }
 
+const combat = () => {
+    if(summonedAllies.length > 0) {
+        for(let i = 0; i < summonedAllies.length; i++) {
+            combatHandler(summonedAllies[i], enemySequence[gameProgress], allyWindows[i], enemyWindow, textObj);
+        }
+    }
+}
+
 const callFriend = () => {
     const chance = new Die(6);
     const ally = unlockedAllies[chance.rollBaseZero()];
@@ -249,16 +257,19 @@ initGame();
 
 btnIncDamage.addEventListener('click', ()=>{
     player.playerDMGBonus += 1;
-    combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
+    //combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
+    combat();
 });
 
 btnIncHit.addEventListener('click', ()=>{
     player.playerHitBonus += 1;
-    combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
+    //combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
+    combat();
 });
 
 btnCall.addEventListener('click', ()=>{
     updateFeedbackUI('You toss the die of fate. ' + callFriend());
+    combat();
 });
 
 btnRestart.addEventListener('click', ()=>{
