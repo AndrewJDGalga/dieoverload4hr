@@ -24,6 +24,7 @@ let unlockedAllies = [];
 let summonedAllies = [];
 let player = null;
 let gameProgress = 0;
+let lazyEnemyReset = false;
 
 
 class Die {
@@ -168,6 +169,11 @@ const setWindowVisibility = (window, hide=false) => {
 
 setWindowVisibility(allyWindows[0]);
 
+const clearFeedbackUI = () => {
+    const c = Array.from(feedback.children);
+    c.forEach((child) => {child.remove();})
+}
+
 const updateFeedbackUI = (txt) => {
     const previous = document.getElementsByClassName('game-feedback_current')[0];
     if(previous){
@@ -180,7 +186,12 @@ const updateFeedbackUI = (txt) => {
     feedback.appendChild(newP);
 }
 
-const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, output, txt) => {
+const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, txt) => {
+    if(lazyEnemyReset){
+        clearFeedbackUI();
+        lazyEnemyReset = false;
+    }
+
     (combatant1.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant1, combatant1Window);
     (combatant2.entityName === player.entityName) ? updatePlayerWindow() : updateEntityWindow(combatant2, combatant2Window);
 
@@ -197,10 +208,10 @@ const damageHandler = (attacker, receiver, txtSrc) => {
     } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead) {
         //enemy dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
-        let prelength = unlockedAllies.length;
+        //let prelength = unlockedAllies.length;
         unlockedAllies[unlockedAllies.length] = receiver;
-        console.log(unlockedAllies[prelength].entityName + " added to party, party is now " + unlockedAllies.length);
         gameProgress++;
+        lazyEnemyReset = true;
     }else if(receiver.entityHealth.isDead) {
         //ally dead
         outcome = txtSrc('end', receiver.entityName);
@@ -223,7 +234,7 @@ const combatHandler = (combatant1, combatant2, combatant1Window, combatant2Windo
         outcome = damageHandler(combatant2, combatant1, txtSource);
     }
 
-    resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, feedback, outcome);
+    resolveCombat(combatant1, combatant2, combatant1Window, combatant2Window, outcome);
 }
 
 const combat = () => {
@@ -259,7 +270,7 @@ const initGame = ()=> {
     setEnemySequence();
     updateEntityWindow(enemySequence[gameProgress], enemyWindow);
 
-    feedback.innerText = textObj('fight-1');
+    updateFeedbackUI(textObj('fight-1'));
 };
 initGame();
 
