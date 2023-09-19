@@ -169,7 +169,15 @@ const setWindowVisibility = (window, hide=false) => {
 setWindowVisibility(allyWindows[0]);
 
 const updateFeedbackUI = (txt) => {
-    feedback.innerText = txt;
+    const previous = document.getElementsByClassName('game-feedback_current')[0];
+    if(previous){
+        previous.classList.remove('game-feedback_current');
+    }
+
+    const newP = document.createElement('p');
+    newP.classList.add('game-feedback_current');
+    newP.innerText = txt;
+    feedback.appendChild(newP);
 }
 
 const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Window, output, txt) => {

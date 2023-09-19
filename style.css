@@ -22,6 +22,14 @@ html, body {
 #game-feedback {
     grid-row: span 3;
     margin-top: 16px;
+    overflow-y: scroll;
+    background-color: black;
+    color: whitesmoke;
+}
+
+.game-feedback_current {
+    background-color: white;
+    color: black;
 }
 
 #game-enemy {
