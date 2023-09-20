@@ -201,23 +201,23 @@ const resolveCombat = (combatant1, combatant2, combatant1Window, combatant2Windo
 const damageHandler = (attacker, receiver, txtSrc) => {
     let outcome = "";
     receiver.entityHealth -= attacker.entityAttack;
-    if(receiver.entityName === player.entityName && receiver.isDead) {
+    if(receiver.entityName === player.entityName && receiver.isDead()) {
         //player dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-loss');
         gameOver = true;
-    } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead) {
+    } else if(receiver.entityName === enemySequence[gameProgress].entityName && receiver.isDead()) {
         //enemy dead
         outcome = txtSrc('end', receiver.entityName) + " " + txtSrc('end-join', receiver.entityName);
-        //let prelength = unlockedAllies.length;
         unlockedAllies[unlockedAllies.length] = receiver;
         gameProgress++;
+        player.resetPlayerBonuses();
         lazyEnemyReset = true;
-    }else if(receiver.entityHealth.isDead) {
+    }else if(receiver.isDead()) {
         //ally dead
         outcome = txtSrc('end', receiver.entityName);
     } else {
         //just hurt
-        outcome = textObj('hit', receiver.entityName, attacker.entityAttack);
+        outcome = txtSrc('hit', receiver.entityName, attacker.entityAttack);
     }
 
     return outcome;
@@ -242,6 +242,8 @@ const combat = () => {
         for(let i = 0; i < summonedAllies.length; i++) {
             combatHandler(summonedAllies[i], enemySequence[gameProgress], allyWindows[i], enemyWindow, textObj);
         }
+    }else {
+        combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
     }
 }
 
@@ -254,7 +256,6 @@ const callFriend = () => {
     if(ally && !summoned) {
         statement = `Summoned ${ally.entityName}!`;
         summonedAllies.push(ally);
-        console.log(ally.entityName);
         updateEntityWindow(ally, allyWindows[summonedAllies.length -1]);
     } else if(ally && summoned) {
         statement = `Die fail, ${ally.entityName} already summoned!`;
@@ -276,13 +277,11 @@ initGame();
 
 btnIncDamage.addEventListener('click', ()=>{
     player.playerDMGBonus += 1;
-    //combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
     combat();
 });
 
 btnIncHit.addEventListener('click', ()=>{
     player.playerHitBonus += 1;
-    //combatHandler(player, enemySequence[gameProgress], playerWindow, enemyWindow, textObj);
     combat();
 });
 
